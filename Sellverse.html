@@ -407,22 +407,60 @@
 </div>
 </div>
 </div>
- <div class="flex flex-col items-center gap-3 mb-8">
-<div class="inline-flex items-center gap-4 px-6 py-2 bg-surface-container-high/40 backdrop-blur-xl border border-primary/20 rounded-full shadow-[0_0_20px_rgba(0,218,243,0.1)]">
-<div class="flex items-center gap-2 border-r border-outline-variant/30 pr-4">
-<span class="relative flex h-2 w-2">
-<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-</span>
-<p class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant">
-<span class="text-primary font-bold drop-shadow-[0_0_8px_rgba(0,218,243,0.6)]" id="online-count">1</span> Online
-      </p>
+ <div style="
+display:flex;
+align-items:center;
+gap:7px;
+padding:8px 14px;
+border:1px solid rgba(0,229,255,0.35);
+border-radius:14px;
+background:rgba(0,15,25,0.45);
+backdrop-filter:blur(6px);
+box-shadow:
+0 0 5px rgba(0,229,255,0.4),
+0 0 12px rgba(0,229,255,0.2);
+color:#8a8fa3;
+font-size:12px;
+letter-spacing:3px;
+font-family:Arial,sans-serif;
+width:fit-content;
+white-space:nowrap;
+">
+
+  <span style="
+  color:#00e5ff;
+  font-size:14px;
+  text-shadow:0 0 8px #00e5ff;
+  ">
+    👥
+  </span>
+
+  <span>
+    TOTAL PENGUNJUNG:
+  </span>
+
+  <span id="counter" style="
+  color:#00e5ff;
+  font-weight:bold;
+  text-shadow:0 0 8px rgba(0,229,255,0.9);
+  ">
+    0
+  </span>
+
 </div>
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-xs text-primary/60">group</span>
-<p class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant">
-        Total Pengunjung: <span class="text-primary font-bold drop-shadow-[0_0_8px_rgba(0,218,243,0.6)]" id="visitor-count">0</span>
-             
+
+<script>
+  let counted = sessionStorage.getItem("counted");
+  let views = localStorage.getItem("views") || 0;
+
+  if (!counted) {
+    views++;
+    localStorage.setItem("views", views);
+    sessionStorage.setItem("counted", "true");
+  }
+
+  document.getElementById("counter").innerText = views;
+</script>
 <div class="pt-8 border-t border-outline-variant/10 text-center">
 <p class="font-label text-[10px] text-on-surface-variant uppercase tracking-[0.2em] leading-relaxed px-4 opacity-60">© 2026 NEON ATELIER - SELLVERSE DIGITAL SERVICES. HAK CIPTA DILINDUNGI..</p>
 </div>
