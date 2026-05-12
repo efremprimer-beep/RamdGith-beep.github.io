@@ -1,0 +1,962 @@
+<html class="dark" lang="id"><head></head><body class="bg-surface text-on-surface">```html
+
+
+
+    <meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sellverse - Premium Digital Access</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">
+    function toggleMoreCategories() {
+        const extraItems = document.querySelectorAll('.extra-category');
+        const toggleText = document.getElementById('toggle-text');
+        const toggleIcon = document.getElementById('toggle-icon');
+        const isHidden = extraItems[0].classList.contains('hidden');
+
+        extraItems.forEach(item => {
+            item.classList.toggle('hidden');
+        });
+
+        if (isHidden) {
+            toggleText.innerText = 'Less';
+            toggleIcon.innerText = 'close';
+        } else {
+            toggleText.innerText = 'More';
+            toggleIcon.innerText = 'grid_view';
+            document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#2b2933",
+                        "on-secondary-fixed-variant": "#4f00d0",
+                        "on-primary-fixed-variant": "#004f58",
+                        "surface-tint": "#00daf3",
+                        "on-tertiary-fixed-variant": "#8f003f",
+                        "inverse-surface": "#e6e0ee",
+                        "on-primary": "#00363d",
+                        "on-background": "#e6e0ee",
+                        "on-surface-variant": "#cac3d8",
+                        "surface-container-highest": "#36333e",
+                        "primary-fixed": "#9cf0ff",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#ffb1c1",
+                        "tertiary": "#ffb1c1",
+                        "secondary-fixed": "#e8deff",
+                        "tertiary-fixed": "#ffd9df",
+                        "secondary-container": "#5203d5",
+                        "primary-fixed-dim": "#00daf3",
+                        "secondary": "#cdbdff",
+                        "surface-container-lowest": "#0f0d16",
+                        "primary": "#00daf3",
+                        "background": "#14121b",
+                        "surface-dim": "#14121b",
+                        "primary-container": "#007e8d",
+                        "outline": "#948ea1",
+                        "outline-variant": "#494455",
+                        "on-error": "#690005",
+                        "surface-bright": "#3b3842",
+                        "secondary-fixed-dim": "#cdbdff",
+                        "on-secondary": "#370096",
+                        "on-primary-container": "#ebfbff",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed": "#20005f",
+                        "on-tertiary": "#66002a",
+                        "surface": "#14121b",
+                        "surface-container-low": "#1c1a24",
+                        "on-surface": "#e6e0ee",
+                        "on-secondary-container": "#c0acff",
+                        "inverse-on-surface": "#322f39",
+                        "error": "#ffb4ab",
+                        "surface-container": "#211e28",
+                        "on-tertiary-fixed": "#3f0018",
+                        "surface-variant": "#36333e",
+                        "on-tertiary-container": "#fff6f6",
+                        "tertiary-container": "#da1e67",
+                        "on-primary-fixed": "#001f24",
+                        "inverse-primary": "#006875"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "display": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Inter"]
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        body {
+            background-color: #14121b;
+            color: #e6e0ee;
+            font-family: 'Manrope', sans-serif;
+            min-height: max(884px, 100dvh);
+            scroll-behavior: smooth;
+        }
+        .modal-enter {
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<!-- Shopping Cart Logic -->
+<script>
+    let cart = [];
+    const salesStats = {
+        'Netflix UHD 4K': { id: 'sold-count-netflix', count: 56 },
+        'Spotify Individual': { id: 'sold-count-spotify', count: 47 },
+        'YouTube Premium': { id: 'sold-count-youtube', count: 32 },
+        'Canva Pro': { id: 'sold-count-canva', count: 38 },
+        'Wink': { id: 'sold-count-wink', count: 34 },
+        'CapCut Pro': { id: 'sold-count-capcut', count:27 },
+        'Alight Motion': { id: 'sold-count-alight', count: 18 },
+        'Bstation': { id: 'sold-count-bstation', count: 20 }
+    };
+
+    function addToCart(name, price) {
+        const numericPrice = parseInt(price.replace(/\./g, ''));
+        const existingItem = cart.find(item => item.name === name);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ name, price: numericPrice, quantity: 1, originalPriceStr: price });
+        }
+        
+        updateCartUI();
+        showNotification(`${name} Pesanan Ditambahkan Dikeranjang!`);
+    }
+
+    function removeFromCart(name) {
+        cart = cart.filter(item => item.name !== name);
+        updateCartUI();
+    }
+
+    function updateSoldCounterUI(name) {
+        const element = document.getElementById(salesStats[name].id);
+        if (element) {
+            let displayValue = salesStats[name].count;
+            if (displayValue >= 1000) {
+                displayValue = (displayValue / 1000).toFixed(1) + 'k+';
+            } else {
+                displayValue = displayValue.toString();
+            }
+            element.innerText = displayValue;
+        }
+    }
+
+    function updateCartUI() {
+        const count = cart.reduce((total, item) => total + item.quantity, 0);
+        document.getElementById('cartBadge').innerText = count;
+        document.getElementById('cartBadge').classList.toggle('hidden', count === 0);
+        
+        const cartItemsList = document.getElementById('cartItemsList');
+        const cartTotalDisplay = document.getElementById('cartTotalDisplay');
+        
+        if (cart.length === 0) {
+            cartItemsList.innerHTML = '<div class="text-center py-10 opacity-40 italic font-body">Your cart is empty</div>';
+            cartTotalDisplay.innerText = 'Rp 0';
+        } else {
+            let html = '';
+            let total = 0;
+            cart.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+                html += `
+                    <div class="flex items-center justify-between p-4 bg-surface-container-high rounded-xl mb-3 border border-outline-variant/10">
+                        <div class="flex-1">
+                            <h4 class="font-headline font-bold text-sm text-on-surface">${item.name}</h4>
+                            <p class="text-xs text-on-surface-variant font-body">Rp ${item.price.toLocaleString('id-ID')} x ${item.quantity}</p>
+                        </div>
+                        <button class="text-error hover:bg-error/10 p-2 rounded-lg transition-colors" onclick="removeFromCart('${item.name}')">
+                            <span class="material-symbols-outlined text-sm">delete</span>
+                        </button>
+                    </div>
+                `;
+            });
+            cartItemsList.innerHTML = html;
+            cartTotalDisplay.innerText = 'Rp ' + total.toLocaleString('id-ID');
+        }
+    }
+
+    function toggleCart() {
+        const sidebar = document.getElementById('cartSidebar');
+        sidebar.classList.toggle('translate-x-full');
+        document.body.style.overflow = sidebar.classList.contains('translate-x-full') ? '' : 'hidden';
+    }
+
+    function showNotification(msg) {
+        const notification = document.getElementById('cartNotification');
+        notification.querySelector('span.msg').innerText = msg;
+        notification.classList.remove('translate-y-20', 'opacity-0');
+        setTimeout(() => {
+            notification.classList.add('translate-y-20', 'opacity-0');
+        }, 2000);
+    }
+
+    function openCheckoutModal() {
+        if (cart.length === 0) {
+            alert('Your cart is empty!');
+            return;
+        }
+
+        const productList = document.getElementById('checkoutProductList');
+        const totalDisplay = document.getElementById('checkoutTotal');
+        
+        let total = 0;
+        productList.innerHTML = cart.map(item => {
+            total += item.price * item.quantity;
+            return `<li>${item.name} (x${item.quantity})</li>`;
+        }).join('');
+        totalDisplay.innerText = 'Rp ' + total.toLocaleString('id-ID');
+
+        document.getElementById('checkoutModal').classList.remove('hidden');
+        document.getElementById('checkoutModal').classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCheckout() {
+        document.getElementById('checkoutModal').classList.add('hidden');
+        document.getElementById('checkoutModal').classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+
+    function handlePayment(event) {
+        event.preventDefault();
+        const email = document.getElementById('email').value;
+        if (!email.endsWith('@gmail.com')) {
+            alert('Please enter a valid @gmail.com address');
+            return;
+        }
+
+        const whatsappNumber = "6285803732903";
+        const items = cart.map(item => ({ name: item.name, quantity: item.quantity }));
+        let itemsListMsg = cart.map(item => `- ${item.name} (x${item.quantity}): Rp ${(item.price * item.quantity).toLocaleString('id-ID')}`).join('%0A');
+        const total = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        
+        localStorage.setItem('recent_order', JSON.stringify({
+            items: items,
+            total: total.toLocaleString('id-ID'),
+            timestamp: Date.now()
+        }));
+
+        const message = `Halo Admin, saya ingin memesan:%0A${itemsListMsg}%0A%0ATotal: Rp ${total.toLocaleString('id-ID')}%0AEmail: ${email}`;
+        
+        cart = [];
+        updateCartUI();
+        closeCheckout();
+        toggleCart();
+
+        window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
+    }
+
+    function scrollToCatalog() {
+        document.getElementById('deals').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.addEventListener('load', () => {
+        const recentOrder = localStorage.getItem('recent_order');
+        if (recentOrder) {
+            const order = JSON.parse(recentOrder);
+            
+            order.items.forEach(item => {
+                if (salesStats[item.name]) {
+                    salesStats[item.name].count += item.quantity;
+                    updateSoldCounterUI(item.name);
+                }
+            });
+
+            const successModal = document.getElementById('successModal');
+            const productList = document.getElementById('successProductList');
+            productList.innerHTML = order.items.map(i => `<li>${i.name} (x${i.quantity})</li>`).join('');
+            document.getElementById('successTotal').innerText = 'Rp ' + order.total;
+            
+            successModal.classList.remove('hidden');
+            successModal.classList.add('flex');
+            
+            localStorage.removeItem('recent_order');
+        }
+
+        // Visitor Counter logic
+        const visitorCountElement = document.getElementById('visitor-count');
+        if (visitorCountElement) {
+            let count = parseInt(localStorage.getItem('visitor_count') || '14280');
+            count += 1;
+            localStorage.setItem('visitor_count', count);
+            visitorCountElement.innerText = count.toLocaleString('id-ID');
+        }
+    });
+
+    function closeSuccessModal() {
+        document.getElementById('successModal').classList.add('hidden');
+        document.getElementById('successModal').classList.remove('flex');
+    }
+
+    function toggleMoreCategories() {
+        const extraItems = document.querySelectorAll('.extra-category');
+        const toggleText = document.getElementById('toggle-text');
+        const toggleIcon = document.getElementById('toggle-icon');
+        const isHidden = extraItems[0].classList.contains('hidden');
+
+        extraItems.forEach(item => {
+            item.classList.toggle('hidden');
+        });
+
+        if (isHidden) {
+            toggleText.innerText = 'TUTUP';
+            toggleIcon.innerText = 'close';
+        } else {
+            toggleText.innerText = 'More';
+            toggleIcon.innerText = 'grid_view';
+            document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+    </script>
+<!-- Floating Cart Button -->
+<button class="fixed right-6 bottom-24 md:bottom-10 z-[60] w-14 h-14 bg-primary text-on-primary rounded-full shadow-[0_0_20px_rgba(0,218,243,0.5)] flex items-center justify-center transition-transform hover:scale-110 active:scale-95 group" onclick="toggleCart()">
+<span class="material-symbols-outlined text-2xl">shopping_cart</span>
+<span class="absolute -top-1 -right-1 bg-secondary text-on-secondary-fixed text-[10px] font-bold px-2 py-0.5 rounded-full border-2 border-background hidden" id="cartBadge">0</span>
+</button>
+<!-- Cart Notification -->
+<div class="fixed bottom-32 left-1/2 -translate-x-1/2 z-[70] bg-surface-container-highest border border-primary/40 px-6 py-3 rounded-full shadow-2xl transition-all duration-300 translate-y-20 opacity-0 flex items-center gap-3" id="cartNotification">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="msg font-headline text-sm font-bold">Pesanan ditambahkan dikeranjang</span>
+</div>
+<!-- Cart Sidebar -->
+<aside class="fixed top-0 right-0 h-full w-full md:w-[400px] bg-background z-[100] transform translate-x-full transition-transform duration-300 border-l border-outline-variant/20 flex flex-col shadow-2xl" id="cartSidebar">
+<div class="p-6 border-b border-outline-variant/20 flex justify-between items-center bg-surface-container-low">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined">shopping_bag</span>
+<h2 class="font-headline font-bold text-xl uppercase tracking-widest">Keranjang Anda</h2>
+</div>
+<button class="p-2 hover:bg-surface-bright rounded-lg transition-colors" onclick="toggleCart()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-6 scrollbar-hide" id="cartItemsList">
+<div class="text-center py-10 opacity-40 italic font-body">Tidak ada pesanan dikeranjang</div>
+</div>
+<div class="p-6 bg-surface-container-lowest border-t border-outline-variant/20">
+<div class="flex justify-between items-center mb-6">
+<span class="font-body text-on-surface-variant">Total harga</span>
+<span class="font-headline font-bold text-2xl text-primary" id="cartTotalDisplay">Rp 0</span>
+</div>
+<button class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-bold rounded-md hover:shadow-[0_0_20px_rgba(0,218,243,0.4)] transition-all duration-300 flex items-center justify-center gap-2" onclick="openCheckoutModal()">
+<span class="material-symbols-outlined">lock</span>
+            Selesaikan pembayaran
+        </button>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 no-border bg-gradient-to-b from-[#1c1a24] to-transparent backdrop-blur-md">
+<div class="flex justify-between items-center px-4 md:px-6 h-16 md:h-20 w-full max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<button aria-label="Menu" class="material-symbols-outlined text-[#00daf3] md:hidden p-2 -ml-2 hover:bg-white/5 rounded-full flex items-center justify-center">menu</button>
+<span class="text-xl md:text-2xl font-bold tracking-tighter text-[#00daf3] drop-shadow-[0_0_8px_rgba(0,218,243,0.5)] font-['Space_Grotesk']">SELLVERSE</span>
+</div>
+<nav class="hidden md:flex items-center gap-8 font-label text-slate-400 text-sm uppercase tracking-widest">
+<a class="text-[#00daf3] transition-all duration-300 hover:opacity-80" href="#">Depan</a>
+<a class="hover:text-[#00daf3] transition-all duration-300" href="#Catalog">Explore</a>
+<a class="hover:text-[#00daf3] transition-all duration-300" href="#deals">Langganan</a>
+<a class="hover:text-[#00daf3] transition-all duration-300" href="#choose">SOP</a>
+</nav>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-primary/20 cursor-pointer">
+<img alt="user profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWSAbQu_IShHrbgAs7PpoXxfkYXBSUu-dU8V_to87a_pmHcl10C1lXtPtoqdZ9nTMb6oUsxbSnGPydE2dC2nRwWjaeBsMoNy6NfyxFcBVN-ozo4quiwVB7tqIjheDOuDd_FfOJI9H4cZFUps0W85OtPuXQcsYnuGyMyxUbZCVkBDRjZWkYBKEg82rm4r2lxpdD2HxNnkeU-0OnP2GvhTmOm1qTCM92Ju2JZ9ohH29PiYT4XJKVC2A_F_xcYIdz98kB11w-0CDea8U"/>
+</div>
+</div>
+</header>
+<main class="pt-16 md:pt-20">
+<!-- Hero Section -->
+<section class="relative min-h-[90dvh] flex items-center justify-center overflow-hidden px-4 py-12">
+<div class="absolute inset-0 z-0">
+<div class="absolute top-1/4 -left-20 w-64 md:w-96 h-64 md:h-96 bg-primary/10 blur-[80px] md:blur-[120px] rounded-full"></div>
+<div class="absolute bottom-1/4 -right-20 w-64 md:w-96 h-64 md:h-96 bg-secondary-container/20 blur-[80px] md:blur-[120px] rounded-full"></div>
+<div class="relative z-10 max-w-6xl mx-auto text-center w-full">
+<img src="image/logo.png.jpeg" class="mx-auto h-20 md:h-32 mb-8 md:mb-10 relative top-10 drop-shadow-[0_0_15px_rgba(0,218,243,0.4)] object-contain" 
+<div class="relative z-10 max-w-6xl mx-auto text-center w-full">
+<h1 class="font-headline text-3xl sm:text-4xl md:text-7xl font-bold mb-6 tracking-tighter leading-tight bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text px-2">
+                    Dapatkan Akses Premium <br class="hidden sm:block"/> dalam Satu Genggaman
+                </h1>
+<p class="font-body text-base md:text-xl text-on-surface-variant max-w-2xl mx-auto mb-10 opacity-80 px-4 leading-relaxed">
+                    Jual beli produk digital dan langganan akun premium dengan aman dan cepat melalui platform terkurasi kami.
+                </p>
+<div class="flex flex-col md:flex-row gap-4 justify-center">
+<button class="px-8 py-4 bg-gradient-to-r from-primary to-primary-container rounded-md font-headline font-bold text-on-primary hover:shadow-[0_0_20px_rgba(0,218,243,0.4)] transition-all duration-300 active:scale-95 transition-all duration-300" onclick="scrollToCatalog()">
+                        Mulai Berlangganan
+                    </button>
+<button class="px-8 py-4 bg-surface-bright/40 backdrop-blur-xl rounded-md font-headline font-bold text-on-surface hover:bg-surface-bright/60 transition-all duration-100 transition-all duration-100" onclick="scrollToCatalog()">
+                        Lihat Katalog
+                    </button>
+</div>
+</section>
+
+<!-- Categories -->
+<section class="py-24 px-6 bg-surface-container-low" id="Catalog">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+<div>
+<span class="font-label text-primary text-xs uppercase tracking-[0.3em] font-bold">Category Curation</span>
+<h2 class="font-headline text-4xl font-bold mt-2">Digital Ecosystem</h2>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"><!-- Existing items -->
+<div class="group relative aspect-square bg-surface-container-highest rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+<img alt="Netflix" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG5ldGZsaXh8ZW58MHx8MHx8fDA%3D"/>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="font-headline font-bold text-white text-lg">Netflix</span>
+</div>
+</div>
+<div class="group relative aspect-square bg-surface-container-highest rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+<img alt="Spotify" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c3BvdGlmeXxlbnwwfHwwfHx8MA%3D%3D"/>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="font-headline font-bold text-white text-lg">Spotify</span>
+</div>
+</div>
+<div class="group relative aspect-square bg-surface-container-highest rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+<img alt="YouTube" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8eW91dHViZXxlbnwwfHwwfHx8MA%3D%3D"/>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="font-headline font-bold text-white text-lg">YouTube</span>
+</div>
+</div>
+<div class="group relative aspect-square bg-surface-container-highest rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+<img alt="Canva" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://images.unsplash.com/photo-1649091245823-18be815da4f7?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y2FudmF8ZW58MHx8MHx8fDA%3D"/>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="font-headline font-bold text-white text-lg">Canva</span>
+</div>
+</div>
+<!-- Hidden items -->
+<div class="extra-category hidden group relative aspect-square bg-surface-container-highest rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+<img alt="Wink" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://tse2.mm.bing.net/th/id/OIP.AZ99qOoMFDmcgsScUNc6uAAAAA?pid=Api&P=0&h=180"/>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="font-headline font-bold text-white text-lg">Wink</span>
+</div>
+</div>
+<div class="extra-category hidden group relative aspect-square bg-surface-container-highest rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+<img alt="Capcut" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://gamelevate.com/wp-content/uploads/2023/12/capcut-800x450.jpg"/>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="font-headline font-bold text-white text-lg">CapCut</span>
+</div>
+</div>
+<div class="extra-category hidden group relative aspect-square bg-surface-container-highest rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+<img alt="Alight Motion" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://tse4.mm.bing.net/th/id/OIP.pjkN_uJF68ztkf5B8anDVwAAAA?pid=Api&P=0&h=180"/>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="font-headline font-bold text-white text-lg">Alight Motion</span>
+</div>
+</div>
+<div class="extra-category hidden group relative aspect-square bg-surface-container-highest rounded-xl overflow-hidden hover:scale-[1.02] transition-transform duration-500 cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+<img alt="Bstation" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://bloguna.com/wp-content/uploads/2025/10/Logo-Bstation.png"/>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="font-headline font-bold text-white text-lg">Bstation</span>
+</div>
+</div>
+<!-- Toggle Button -->
+<div class="group relative aspect-square bg-primary/10 border border-primary/20 rounded-xl flex items-center justify-center hover:bg-primary/20 transition-all duration-300 cursor-pointer" id="toggle-categories-btn" onclick="toggleMoreCategories()">
+<div class="text-center">
+<span class="material-symbols-outlined text-4xl text-primary block mb-2" id="toggle-icon">grid_view</span>
+<span class="font-headline font-bold text-primary text-sm uppercase tracking-widest" id="toggle-text">Lainnya</span>
+</div>
+</div></div>
+</div>
+</section>
+<!-- Trending Deals (Product Grid Expanded to 8) -->
+<section class="py-24 px-6 relative" id="deals">
+<div class="max-w-7xl mx-auto">
+<div class="flex items-center gap-3 mb-12">
+<span class="w-12 h-[1px] bg-primary"></span>
+<h2 class="font-headline text-3xl font-bold">Trending Premium Deals</h2>
+</div>
+<div class="grid grid-cols-1 gap-8 lg:grid-cols-4 md:grid-cols-2">
+<!-- Card 1: Netflix -->
+<div class="bg-surface-container-highest/40 backdrop-blur-sm rounded-xl p-8 border border-outline-variant/10 group hover:border-primary/40 transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-red-600/10 rounded-lg text-red-500">
+<span class="material-symbols-outlined text-3xl">smart_display</span>
+</div>
+<span class="font-label text-[10px] text-tertiary bg-tertiary-container/20 px-3 py-1 rounded-full uppercase tracking-tighter">Bestseller</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">Netflix UHD 4K</h3>
+<p class="font-body text-on-surface-variant text-sm mb-6">Akun bersama, kapasitas lebih besar , Tanpa iklan, selama 1 bulan</p>
+<div class="flex items-baseline gap-2 mb-8">
+<span class="font-headline text-2xl font-bold text-primary">Rp 35.000</span>
+<span class="font-body text-xs text-on-surface-variant line-through">Rp 186.000</span>
+</div>
+<div class="flex items-center justify-between gap-4">
+<div class="flex items-center gap-1.5 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60">
+<span class="material-symbols-outlined text-xs text-primary/70">shopping_bag</span>
+<span class="text-primary font-bold" id="sold-count-netflix">56</span> <span>Sold</span>
+</div>
+<button class="px-4 py-2 bg-surface-bright hover:bg-primary hover:text-on-primary font-headline font-bold rounded-md transition-all duration-300 flex-1 flex items-center justify-center gap-2" onclick="addToCart('Netflix UHD 4K', '35.000')">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span> Tambahkan Keranjang
+                        </button>
+</div>
+</div>
+<!-- Card 2: Spotify -->
+<div class="bg-surface-container-highest/40 backdrop-blur-sm rounded-xl p-8 border border-outline-variant/10 group hover:border-primary/40 transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-green-600/10 rounded-lg text-green-500">
+<span class="material-symbols-outlined text-3xl">music_note</span>
+</div>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">Spotify Individual</h3>
+<p class="font-body text-on-surface-variant text-sm mb-6">Musik tanpa iklan, fitur eksklusif , selama 1 bulan</p>
+<div class="flex items-baseline gap-2 mb-8">
+<span class="font-headline text-3xl font-bold text-primary">Rp 25.000</span>
+<span class="font-body text-xs text-on-surface-variant line-through">Rp 54.000</span>
+</div>
+<div class="flex items-center justify-between gap-4">
+<div class="flex items-center gap-1.5 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60">
+<span class="material-symbols-outlined text-xs text-primary/70">shopping_bag</span>
+<span class="text-primary font-bold" id="sold-count-spotify">47</span> <span>Sold</span>
+</div>
+<button class="px-4 py-2 bg-surface-bright hover:bg-primary hover:text-on-primary font-headline font-bold rounded-md transition-all duration-300 flex-1 flex items-center justify-center gap-2" onclick="addToCart('Spotify Individual', '25.000')">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span> Tambahkan Keranjang
+                        </button>
+</div>
+</div>
+<!-- Card 3: YouTube -->
+<div class="bg-surface-container-highest/40 backdrop-blur-sm rounded-xl p-8 border border-outline-variant/10 group hover:border-primary/40 transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-red-600/10 rounded-lg text-red-500">
+<span class="material-symbols-outlined text-3xl">play_circle</span>
+</div>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">YouTube Premium</h3>
+<p class="font-body text-on-surface-variant text-sm mb-6">Tanpa iklan, lapangan bemain bebas, selama 1 bulan</p>
+<div class="flex items-baseline gap-2 mb-8">
+<span class="font-headline text-3xl font-bold text-primary">Rp 20.000</span>
+<span class="font-body text-xs text-on-surface-variant line-through">Rp 59.000</span>
+</div>
+<div class="flex items-center justify-between gap-4">
+<div class="flex items-center gap-1.5 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60">
+<span class="material-symbols-outlined text-xs text-primary/70">shopping_bag</span>
+<span class="text-primary font-bold" id="sold-count-youtube">32</span> <span>Sold</span>
+</div>
+<button class="px-4 py-2 bg-surface-bright hover:bg-primary hover:text-on-primary font-headline font-bold rounded-md transition-all duration-300 flex-1 flex items-center justify-center gap-2" onclick="addToCart('YouTube Premium', '20.000')">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span> Tambahkan Keranjang
+                        </button>
+</div>
+</div>
+<!-- Card 4: Canva -->
+<div class="bg-surface-container-highest/40 backdrop-blur-sm rounded-xl p-8 border border-outline-variant/10 group hover:border-primary/40 transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-purple-600/10 rounded-lg text-purple-500">
+<span class="material-symbols-outlined text-3xl">palette</span>
+</div>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">Canva Pro</h3>
+<p class="font-body text-on-surface-variant text-sm mb-6">Tim pribadi, akses penuh, semua templat terbuka, selama 1 bulan</p>
+<div class="flex items-baseline gap-2 mb-8">
+<span class="font-headline text-3xl font-bold text-primary">Rp 15.000</span>
+<span class="font-body text-xs text-on-surface-variant line-through">Rp 49.000</span>
+</div>
+<div class="flex items-center justify-between gap-4">
+<div class="flex items-center gap-1.5 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60">
+<span class="material-symbols-outlined text-xs text-primary/70">shopping_bag</span>
+<span class="text-primary font-bold" id="sold-count-canva">38</span> <span>Sold</span>
+</div>
+<button class="px-4 py-2 bg-surface-bright hover:bg-primary hover:text-on-primary font-headline font-bold rounded-md transition-all duration-300 flex-1 flex items-center justify-center gap-2" onclick="addToCart('Canva Pro', '15.000')">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span> Tambahkan Keranjang
+                        </button>
+</div>
+</div>
+<!-- Card 5: Wink -->
+<div class="bg-surface-container-highest/40 backdrop-blur-sm rounded-xl p-8 border border-outline-variant/10 group hover:border-primary/40 transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-blue-600/10 rounded-lg text-blue-400">
+<span class="material-symbols-outlined text-3xl">auto_videocam</span>
+</div>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">Wink</h3>
+<p class="font-body text-on-surface-variant text-sm mb-6">Memperbaiki vidio, Alat ai, Kualitas tinggi</p>
+<div class="flex items-baseline gap-2 mb-8">
+<span class="font-headline text-3xl font-bold text-primary">Rp 25.000</span>
+<span class="font-body text-xs text-on-surface-variant line-through">Rp 89.000</span>
+</div>
+<div class="flex items-center justify-between gap-4">
+<div class="flex items-center gap-1.5 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60">
+<span class="material-symbols-outlined text-xs text-primary/70">shopping_bag</span>
+<span class="text-primary font-bold" id="sold-count-wink">34</span> <span>Sold</span>
+</div>
+<button class="px-4 py-2 bg-surface-bright hover:bg-primary hover:text-on-primary font-headline font-bold rounded-md transition-all duration-300 flex-1 flex items-center justify-center gap-2" onclick="addToCart('Wink', '25.000')">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span> Tambahkan keranjang
+                        </button>
+</div>
+</div>
+<!-- Card 6: CapCut Pro -->
+<div class="bg-surface-container-highest/40 backdrop-blur-sm rounded-xl p-8 border border-outline-variant/10 group hover:border-primary/40 transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-slate-600/10 rounded-lg text-slate-300">
+<span class="material-symbols-outlined text-3xl">movie_edit</span>
+</div>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">CapCut Pro</h3>
+<p class="font-body text-on-surface-variant text-sm mb-6">, fitur eksklusif , selama 1 bulan, Tampa iklan</p>
+<div class="flex items-baseline gap-2 mb-8">
+<span class="font-headline text-2xl font-bold text-primary">Rp 20.000</span>
+<span class="font-body text-xs text-on-surface-variant line-through">Rp 129.000</span>
+</div>
+<div class="flex items-center justify-between gap-4">
+<div class="flex items-center gap-1.5 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60">
+<span class="material-symbols-outlined text-xs text-primary/70">shopping_bag</span>
+<span class="text-primary font-bold" id="sold-count-capcut">27</span> <span>Sold</span>
+</div>
+<button class="px-4 py-2 bg-surface-bright hover:bg-primary hover:text-on-primary font-headline font-bold rounded-md transition-all duration-300 flex-1 flex items-center justify-center gap-2" onclick="addToCart('CapCut Pro', '20.000')">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span> Tambahkan Keranjang
+                        </button>
+</div>
+</div>
+<!-- Card 7: Alight Motion -->
+<div class="bg-surface-container-highest/40 backdrop-blur-sm rounded-xl p-8 border border-outline-variant/10 group hover:border-primary/40 transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-green-600/10 rounded-lg text-green-400">
+<span class="material-symbols-outlined text-3xl">motion_photos_on</span>
+</div>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">Alight Motion</h3>
+<p class="font-body text-on-surface-variant text-sm mb-6">Tanpa Watermark, Ekspor HD, Fitur premium terbuka</p>
+<div class="flex items-baseline gap-2 mb-8">
+<span class="font-headline text-3xl font-bold text-primary">Rp 15.000</span>
+<span class="font-body text-xs text-on-surface-variant line-through">Rp 45.000</span>
+</div>
+<div class="flex items-center justify-between gap-4">
+<div class="flex items-center gap-1.5 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60">
+<span class="material-symbols-outlined text-xs text-primary/70">shopping_bag</span>
+<span class="text-primary font-bold" id="sold-count-alight">18</span> <span>Sold</span>
+</div>
+<button class="px-4 py-2 bg-surface-bright hover:bg-primary hover:text-on-primary font-headline font-bold rounded-md transition-all duration-300 flex-1 flex items-center justify-center gap-2" onclick="addToCart('Alight Motion', '15.000')">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span> Tambahkan Keranjang
+                        </button>
+</div>
+</div>
+<!-- Card 8: Bstation -->
+<div class="bg-surface-container-highest/40 backdrop-blur-sm rounded-xl p-8 border border-outline-variant/10 group hover:border-primary/40 transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-pink-600/10 rounded-lg text-pink-400">
+<span class="material-symbols-outlined text-3xl">tv_gen</span>
+</div>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">Bstation</h3>
+<p class="font-body text-on-surface-variant text-sm mb-6">Akses Premium, Streaming kualitas tinggi, Tidak ada iklan</p>
+<div class="flex items-baseline gap-2 mb-8">
+<span class="font-headline text-3xl font-bold text-primary">Rp 10.000</span>
+<span class="font-body text-xs text-on-surface-variant line-through">Rp 30.000</span>
+</div>
+<div class="flex items-center justify-between gap-4">
+<div class="flex items-center gap-1.5 font-label text-[10px] uppercase tracking-widest text-on-surface-variant/60">
+<span class="material-symbols-outlined text-xs text-primary/70">shopping_bag</span>
+<span class="text-primary font-bold" id="sold-count-bstation">20</span> <span>Sold</span>
+</div>
+<button class="px-4 py-2 bg-surface-bright hover:bg-primary hover:text-on-primary font-headline font-bold rounded-md transition-all duration-300 flex-1 flex items-center justify-center gap-2" onclick="addToCart('Bstation', '10.000')">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span> Tambahkan Keranjang
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+    <!-- Why choose Us -->
+<section class="py-16 md:py-24 px-6 bg-surface-container-lowest overflow-hidden" id="choose"></section>
+<section class="py-16 md:py-24 px-4 bg-surface-container-lowest overflow-hidden">
+<div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-10 md:gap-16 px-2">
+<div class="w-full lg:w-1/2 relative">
+<div class="aspect-square bg-gradient-to-br from-primary-container/20 to-secondary-container/20 rounded-full absolute -top-10 -left-10 w-full animate-pulse blur-3xl opacity-30"></div>
+<img alt="Secure Tech" class="relative z-10 w-full rounded-2xl grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl object-cover min-h-[300px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSfBmpeYAHBJz7NDkD5I3NKCGXeTY-Wt7hXrOplfnGsB535nYpa_sJOiivZA3jAbsWfguOIY6U_tFV5RK7bmzVHt0RgtgAt7mofDn6ZywcfBFRYZnl8ztekGwcJZTMaTijoZ6e0EOm70wQOcDPLvQ2LmrCGl9tK65cQ7wFy2c11EOvDD321MfAju1frjAXkC4K9dzYjyXnPgVuQCTAfOGJp9NEUK4wQ05mD_2twankWVKs7d1l2ultUAliNDe-bX__6Y1KIzd43ME"/>
+</div>
+<div class="w-full lg:w-1/2">
+<span class="font-label text-primary text-xs uppercase tracking-[0.4em] font-bold mb-4 block">(SOP)</span>
+<h2 class="font-headline text-3xl md:text-5xl font-bold mb-8 md:mb-12 leading-tight">Standar Operasional<br/>Prosedur</h2>
+<div class="space-y-8 md:space-y-10">
+<div class="flex gap-4 md:gap-6">
+<div class="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-primary/10 rounded-lg border border-primary/20">
+<span class="material-symbols-outlined text-primary">shield_person</span>
+</div>
+<div>
+<h4 class="font-headline text-xl font-bold mb-2">Pemesanan & pembayaran</h4>
+<p class="font-body text-on-surface-variant text-sm md:text-base leading-relaxed">User memilih produk digital disellvers,setelah melakukan click beli sekarang akan mucul pop up,dan harus mengisi email lalu tekan pesan via wa yg akan langsung mengarahkan ke wa admin .</p>
+</div>
+</div>
+<div class="flex gap-4 md:gap-6">
+<div class="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-primary/10 rounded-lg border border-primary/20">
+<span class="material-symbols-outlined text-primary">Support_agent</span>
+</div>
+<div>
+<h4 class="font-headline text-xl font-bold mb-2">Pengiriman produk</h4>
+<p class="font-body text-on-surface-variant text-sm md:text-base leading-relaxed">setelah pembayaran valid,dan email yg diisi benar,maka produk digital akan dikirim lewat email yang dikirim oleh pembeli.</p>
+</div>
+</div>
+<div class="flex gap-4 md:gap-6">
+<div class="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-primary/10 rounded-lg border border-primary/20">
+<span class="material-symbols-outlined text-primary">bolt</span>
+</div>
+<div>
+<h4 class="font-headline text-xl font-bold mb-2">Batasan usi</h4>
+<p class="font-body text-on-surface-variant text-sm md:text-base leading-relaxed">Minimal umur 13 tahun(dengan pengawasan orang tua),disarankan diatas 16 agar memahami penggunaan akun digital,jika umur dibawa 12 tahun (maka sangat disarankan orang tua/ yg paham penggunaan akun digital untuk melakukan pembelian).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest pt-16 md:pt-20 pb-28 md:pb-12 px-4">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-12 mb-16 px-2">
+<div class="col-span-1 md:col-span-2">
+<h3 class="text-2xl font-bold tracking-tighter text-[#00daf3] font-headline mb-6">SELLVERSE</h3>
+<p class="font-body text-on-surface-variant text-sm max-w-sm leading-relaxed opacity-80">Kurator keanggotaan Digita premium.menyediakan akses digital kelas atas dengan keamanan untuk individu modern.
+</p>
+</div>
+<div>
+<h4 class="font-headline font-bold text-sm uppercase tracking-widest mb-6">Quick Links</h4>
+<nav class="flex flex-col space-y-4 font-body text-sm text-on-surface-variant">
+<a class="hover:text-primary transition-colors py-1 inline-block" href="#catalog">Catalog</a>
+<a class="hover:text-primary transition-colors py-1 inline-block" href="#">menjadi penjual</a>
+<a class="hover:text-primary transition-colors py-1 inline-block" href="#">lacak pesanan</a>
+<a class="hover:text-primary transition-colors py-1 inline-block" href="#">pusat bantuan</a>
+</nav>
+</div>
+<div>
+<h4 class="font-headline font-bold text-sm uppercase tracking-widest mb-6">Connect</h4>
+<div class="flex gap-4">
+<a aria-label="Share" class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all duration-300 border border-white/5" href="#">
+<span class="material-symbols-outlined text-lg">share</span>
+</a>
+<a aria-label="Email" class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all duration-300 border border-white/5" href="#">
+<span class="material-symbols-outlined text-lg">alternate_email</span>
+</a>
+<a aria-label="Chat" class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all duration-300 border border-white/5" href="#">
+<span class="material-symbols-outlined text-lg">chat</span>
+</a>
+</div>
+</div>
+</div>
+<div style="
+display:flex;
+align-items:center;
+gap:7px;
+padding:8px 14px;
+border:1px solid rgba(0,229,255,0.35);
+border-radius:14px;
+background:rgba(0,15,25,0.45);
+backdrop-filter:blur(6px);
+box-shadow:
+0 0 5px rgba(0,229,255,0.4),
+0 0 12px rgba(0,229,255,0.2);
+color:#8a8fa3;
+font-size:12px;
+letter-spacing:3px;
+font-family:Arial,sans-serif;
+width:fit-content;
+white-space:nowrap;
+">
+
+  <span style="
+  color:#00e5ff;
+  font-size:14px;
+  text-shadow:0 0 8px #00e5ff;
+  ">
+    👥
+  </span>
+
+  <span>
+    TOTAL PENGUNJUNG:
+  </span>
+
+  <span id="counter" style="
+  color:#00e5ff;
+  font-weight:bold;
+  text-shadow:0 0 8px rgba(0,229,255,0.9);
+  ">
+    0
+  </span>
+
+</div>
+
+<script>
+  let counted = sessionStorage.getItem("counted");
+  let views = localStorage.getItem("views") || 0;
+
+  if (!counted) {
+    views++;
+    localStorage.setItem("views", views);
+    sessionStorage.setItem("counted", "true");
+  }
+
+  document.getElementById("counter").innerText = views;
+</script>
+<div class="pt-8 border-t border-outline-variant/10 text-center">
+<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-[0.2em] leading-relaxed px-4 opacity-60">© 2024 NEON ATELIER - SELLVERSE DIGITAL SERVICES. ALL RIGHTS RESERVED.</p>
+</div>
+</div>
+</footer>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-2 pb-safe bg-[#14121b]/95 backdrop-blur-3xl z-[90] md:hidden border-t border-white/5 shadow-[0_-8px_32px_rgba(0,0,0,0.5)]">
+<a class="flex flex-col items-center justify-center text-[#00daf3] relative w-1/4 h-16 group" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest mt-1">Depan</span>
+<div class="absolute bottom-1 w-1 h-1 bg-[#00daf3] rounded-full shadow-[0_0_10px_#00daf3]"></div>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 hover:text-white transition-colors w-1/4 h-16 group" href="#Catalog">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">explore</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest mt-1">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 hover:text-white transition-colors w-1/4 h-16 group" href="#deals">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">subscriptions</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest mt-1">Deals</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 hover:text-white transition-colors w-1/4 h-16 group" href="#choose">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">person</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest mt-1">SOP</span>
+</a>
+</nav>
+
+<!-- Checkout Modal -->
+<div class="fixed inset-0 z-[110] hidden items-center justify-center px-6" id="checkoutModal">
+<div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeCheckout()"></div>
+<div class="relative w-full max-w-md bg-surface-container-high border border-outline-variant/30 rounded-2xl overflow-hidden modal-enter">
+<div class="p-6 border-b border-outline-variant/20 flex justify-between items-center bg-surface-container-highest">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined">shopping_cart_checkout</span>
+<h3 class="font-headline font-bold text-lg">Konfirmasi Pesanan</h3>
+</div>
+<button class="text-on-surface-variant hover:text-white transition-colors" onclick="closeCheckout()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-8">
+<form class="space-y-6" id="checkoutForm" onsubmit="handlePayment(event)"><div>
+<label class="block font-label text-xs text-on-surface-variant uppercase tracking-widest mb-2" for="email">Gmail Address</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg px-4 py-3 text-on-surface focus:outline-none focus:border-primary transition-all font-body" id="email" pattern="[a-z0-9._%+-]+@gmail\.com$" placeholder="username@gmail.com" required="" type="email"/>
+<p class="text-[10px] text-on-surface-variant/50 mt-1 italic">*isi email dengan benar @gmail.com address</p>
+</div>
+<div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/10">
+<span class="font-label text-[10px] text-primary uppercase tracking-widest block mb-2">Ringkasan Pesanan</span>
+<ul class="font-body text-sm text-on-surface space-y-1 mb-3 list-disc list-inside" id="checkoutProductList">
+<!-- Product list injected via JS -->
+</ul>
+<div class="pt-3 border-t border-outline-variant/20 flex justify-between items-center">
+<span class="text-xs text-on-surface-variant">Total Bayar</span>
+<span class="font-headline font-bold text-primary text-lg" id="checkoutTotal">Rp 0</span>
+</div>
+</div>
+<div>
+<label class="block font-label text-xs text-on-surface-variant uppercase tracking-widest mb-3">Metode Bayar (Pilih di WhatsApp)</label>
+<div class="p-4 rounded-lg border border-outline-variant/30 bg-surface-container-low text-on-surface-variant text-sm italic">
+                            Anda akan diarahkan ke WhatsApp untuk menyelesaikan pembayaran via DANA, OVO, QRIS, atau Bank.
+                        </div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:shadow-[0_0_20px_rgba(0,218,243,0.4)] transition-all duration-300 active:scale-[0.98] mt-4 flex items-center justify-center gap-2" type="submit">
+<span class="material-symbols-outlined text-xl">chat</span>
+                        Checkout via WhatsApp
+                    </button></form>
+</div>
+</div>
+</div>
+<!-- Success Modal -->
+<div class="fixed inset-0 z-[120] hidden items-center justify-center px-6" id="successModal">
+<div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeSuccessModal()"></div>
+<div class="relative w-full max-w-md bg-surface-container-high border border-primary/30 rounded-2xl overflow-hidden modal-enter">
+<div class="p-8 text-center">
+<div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-5xl text-primary">verified</span>
+</div>
+<h3 class="font-headline font-bold text-2xl text-on-surface mb-2">Pesanan Diterima!</h3>
+<p class="font-body text-on-surface-variant text-sm mb-6">Permintaan Anda telah Diteruskan Ke Whatsapp kami.</p>
+<div class="bg-surface-container-low rounded-xl p-4 mb-8 text-left border border-outline-variant/10">
+<span class="font-label text-[10px] text-primary uppercase tracking-widest block mb-2">RINCIAN PEMBELIAN</span>
+<ul class="font-body text-sm text-on-surface space-y-1 mb-3 list-disc list-inside" id="successProductList">
+<!-- Product list injected here -->
+</ul>
+<div class="pt-3 border-t border-outline-variant/20 flex justify-between items-center">
+<span class="text-xs text-on-surface-variant">Total harga</span>
+<span class="font-headline font-bold text-primary" id="successTotal">Rp 0</span>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-headline font-bold rounded-md hover:shadow-[0_0_20px_rgba(0,218,243,0.4)] transition-all duration-300" onclick="closeSuccessModal()">
+                Tutup
+            </button>
+</div>
+</div>
+</div>
+    </script>
+<div style="
+background:#111;
+padding:15px;
+border-radius:20px;
+border:2px solid #00ffee;
+box-shadow:0 0 15px #00ffee;
+margin-top:20px;
+text-align:center;
+">
+
+<h2 style="
+color:#00ffee;
+margin-bottom:15px;
+font-family:sans-serif;
+">
+📍 Lokasi Kami
+</h2>
+
+<p style="
+color:white;
+margin-bottom:15px;
+font-family:sans-serif;
+">
+Urban Store Jember
+</p>
+
+<a href="https://maps.app.goo.gl/a5Mt4iDt2aGz6tuR6?g_st=aw"
+target="_blank"
+style="
+display:inline-block;
+padding:12px 20px;
+background:#00ffee;
+color:black;
+text-decoration:none;
+border-radius:15px;
+font-weight:bold;
+box-shadow:0 0 15px #00ffee;
+font-family:sans-serif;
+">
+📍 Buka Google Maps
+</a>
+</div>
+
+</body></html>
